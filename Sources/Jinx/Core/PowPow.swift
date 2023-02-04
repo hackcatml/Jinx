@@ -266,6 +266,15 @@ struct PowPow {
             return .noHookLib
         }
         
+        if image == nil {
+            guard let sym: UnsafeMutableRawPointer = MSFindSymbol(nil, function)
+            else {
+                return .noFunction
+            }
+            MSHookFunction(sym, replacement, &orig)
+            return .success
+        }
+        
         guard let sym: UnsafeMutableRawPointer = MSFindSymbol(MSGetImageByName(image ?? current), function) else {
             return .noFunction
         }
